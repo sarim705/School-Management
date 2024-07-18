@@ -1,0 +1,18 @@
+form-container, .schools-list {
+  padding: 20px;
+  max-width: 600px;
+  margin: auto;
+}
+
+.form-container form div, .school-card {
+  margin-bottom: 15px;
+}
+
+.school-card img {
+  width: 100%;
+  height: auto;
+}
+
+.school-card h2 {
+  margin: 10px 0;
+}
