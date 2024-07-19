@@ -60,12 +60,12 @@ export default function Home() {
     <div style={containerStyle}>
       <h1 style={headingStyle}>WELCOME TO EDUNIFY - UNIFORM APPLICATION</h1>
       <h2 style={subHeadingStyle}>School Management System</h2>
-      <Link href="/addSchool" passHref>
+      <Link href="/addSchool" >
         <div style={linkStyle} onMouseOver={e => e.currentTarget.style = {...linkStyle, ...linkHoverStyle}} onMouseOut={e => e.currentTarget.style = linkStyle}>
           Add School
         </div>
       </Link>
-      <Link href="/showSchools" passHref>
+      <Link href="/showSchools" >
         <div style={linkStyle} onMouseOver={e => e.currentTarget.style = {...linkStyle, ...linkHoverStyle}} onMouseOut={e => e.currentTarget.style = linkStyle}>
           Show Schools
         </div>
