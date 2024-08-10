@@ -1,34 +1,87 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import Image from 'next/image';
 
-export default function ShowSchools() {
+
+const ShowSchools = () => {
   const [schools, setSchools] = useState([]);
 
   useEffect(() => {
-    async function fetchData() {
+    const fetchSchools = async () => {
       try {
         const response = await axios.get('/api/getSchools');
         setSchools(response.data);
       } catch (error) {
-        console.error(error);
+        console.error('Error fetching schools:', error);
       }
-    }
-    fetchData();
+    };
+    fetchSchools();
   }, []);
 
   return (
-    <div className="container">
-      <div className="grid">
+    <div style={styles.container}>
+      <h1 style={styles.header}> List Of Schools</h1>
+      <ul style={styles.list}>
         {schools.map((school) => (
-          <div key={school.id} className="school-card">
-            <Image src={`/schoolImages/${school.image}`} alt={school.name} width={500} height={300} className="school-image" />
-            <h2 className="school-name">{school.name}</h2>
-            <p className="school-address">{school.address}</p>
-            <p className="school-city">{school.city}</p>
-          </div>
+          <li key={school.id} style={styles.listItem}>
+            <h2 style={styles.schoolName}>{school.name}</h2>
+            <p style={styles.schoolInfo}>{school.address}, {school.city}, {school.state}</p>
+            <p style={styles.schoolInfo}>Contact: {school.contact}</p>
+            <p style={styles.schoolInfo}>Email: {school.email_id}</p>
+            {school.image && (
+              <img
+                src={school.image}
+                alt={`${school.name} logo`}
+                style={styles.schoolImage}
+              />
+            )}
+          </li>
         ))}
-      </div>
+      </ul>
     </div>
   );
-}
+};
+
+const styles = {
+  container: {
+    padding: '20px',
+    maxWidth: '900px',
+    margin: 'auto',
+  },
+  header: {
+    fontSize: '28px',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: '20px',
+  },
+  list: {
+    listStyleType: 'none',
+    padding: '0',
+  },
+  listItem: {
+    backgroundColor: '#f9f9f9',
+    padding: '20px',
+    marginBottom: '20px',
+    borderRadius: '8px',
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+    textAlign: 'center',
+  },
+  schoolName: {
+    fontSize: '24px',
+    marginBottom: '10px',
+  },
+  schoolInfo: {
+    fontSize: '16px',
+    marginBottom: '5px',
+  },
+  schoolImage: {
+    width: '300px', 
+    height: 'auto', 
+    borderRadius: '10px', 
+    marginTop: '15px', 
+    
+  },
+};
+
+export default ShowSchools;
+
+

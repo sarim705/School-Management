@@ -1,124 +1,153 @@
+import React from 'react';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 
-export default function AddSchool() {
-  const { register, handleSubmit, formState: { errors } } = useForm();
+const AddSchool = () => {
+  const { register, handleSubmit, reset } = useForm();
 
   const onSubmit = async (data) => {
     const formData = new FormData();
-    for (const key in data) {
-      formData.append(key, data[key]);
+    formData.append('name', data.name);
+    formData.append('address', data.address);
+    formData.append('city', data.city);
+    formData.append('state', data.state);
+    formData.append('contact', data.contact);
+    formData.append('email_id', data.email_id);
+
+    if (data.image[0]) {
+      formData.append('image', data.image[0]);
     }
 
     try {
-      await axios.post('/api/addSchool', formData, {
+      const response = await axios.post('/api/addSchool', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
+      console.log('Response:', response.data);
       alert('School added successfully!');
+      reset();
     } catch (error) {
-      console.error(error);
+      console.error('Error:', error.response ? error.response.data : error.message);
       alert('Failed to add school.');
     }
   };
 
-  const containerStyle = {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: '2rem',
-    maxWidth: '600px',
-    margin: 'auto',
-    backgroundColor: '#fff',
-    boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
-    borderRadius: '8px'
-  };
-
-  const formStyle = {
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '1rem'
-  };
-
-  const inputStyle = {
-    padding: '0.75rem',
-    border: '1px solid #ddd',
-    borderRadius: '4px',
-    fontSize: '1rem',
-    width: '100%'
-  };
-
-  const labelStyle = {
-    fontSize: '1rem',
-    marginBottom: '0.5rem',
-    color: '#333'
-  };
-
-  const errorStyle = {
-    color: 'red',
-    fontSize: '0.875rem'
-  };
-
-  const buttonStyle = {
-    padding: '0.75rem 1.5rem',
-    border: 'none',
-    borderRadius: '4px',
-    backgroundColor: '#0070f3',
-    color: '#fff',
-    fontSize: '1rem',
-    cursor: 'pointer',
-    transition: 'background-color 0.3s ease'
-  };
-
-  const buttonHoverStyle = {
-    backgroundColor: '#005bb5'
-  };
-
   return (
-    <div style={containerStyle}>
-      <form onSubmit={handleSubmit(onSubmit)} style={formStyle}>
-        <div>
-          <label style={labelStyle}>Name:</label>
-          <input {...register('name', { required: true })} style={inputStyle} />
-          {errors.name && <span style={errorStyle}>This field is required</span>}
+    <div style={styles.container}>
+      <h2 style={styles.header}>Add New School</h2>
+      <form onSubmit={handleSubmit(onSubmit)} style={styles.form}>
+        <div style={styles.formGroup}>
+          <label style={styles.label}>School Name</label>
+          <input
+            {...register('name', { required: true })}
+            style={styles.input}
+            placeholder="Enter school name"
+          />
         </div>
-        <div>
-          <label style={labelStyle}>Address:</label>
-          <input {...register('address', { required: true })} style={inputStyle} />
-          {errors.address && <span style={errorStyle}>This field is required</span>}
+        <div style={styles.formGroup}>
+          <label style={styles.label}>Address</label>
+          <input
+            {...register('address', { required: true })}
+            style={styles.input}
+            placeholder="Enter address"
+          />
         </div>
-        <div>
-          <label style={labelStyle}>City:</label>
-          <input {...register('city', { required: true })} style={inputStyle} />
-          {errors.city && <span style={errorStyle}>This field is required</span>}
+        <div style={styles.formGroup}>
+          <label style={styles.label}>City</label>
+          <input
+            {...register('city', { required: true })}
+            style={styles.input}
+            placeholder="Enter city"
+          />
         </div>
-        <div>
-          <label style={labelStyle}>State:</label>
-          <input {...register('state', { required: true })} style={inputStyle} />
-          {errors.state && <span style={errorStyle}>This field is required</span>}
+        <div style={styles.formGroup}>
+          <label style={styles.label}>State</label>
+          <input
+            {...register('state', { required: true })}
+            style={styles.input}
+            placeholder="Enter state"
+          />
         </div>
-        <div>
-          <label style={labelStyle}>Contact:</label>
-          <input {...register('contact', { required: true })} style={inputStyle} />
-          {errors.contact && <span style={errorStyle}>This field is required</span>}
+        <div style={styles.formGroup}>
+          <label style={styles.label}>Contact</label>
+          <input
+            {...register('contact', { required: true })}
+            style={styles.input}
+            placeholder="Enter contact number"
+          />
         </div>
-        <div>
-          <label style={labelStyle}>Email:</label>
-          <input {...register('email_id', { required: true, pattern: /^\S+@\S+$/i })} style={inputStyle} />
-          {errors.email_id && <span style={errorStyle}>Invalid email address</span>}
+        <div style={styles.formGroup}>
+          <label style={styles.label}>Email</label>
+          <input
+            {...register('email_id', { required: true })}
+            style={styles.input}
+            placeholder="Enter email"
+          />
         </div>
-        <div>
-          <label style={labelStyle}>Image:</label>
-          <input type="file" {...register('image', { required: true })} style={inputStyle} />
-          {errors.image && <span style={errorStyle}>This field is required</span>}
+        <div style={styles.formGroup}>
+          <label style={styles.label}>Upload Image</label>
+          <input
+            type="file"
+            {...register('image', { required: true })}
+            style={styles.input}
+          />
         </div>
-        <button type="submit" style={buttonStyle} onMouseOver={e => e.currentTarget.style = {...buttonStyle, ...buttonHoverStyle}} onMouseOut={e => e.currentTarget.style = buttonStyle}>
+        <button type="submit" style={styles.button}>
           Add School
         </button>
       </form>
     </div>
   );
-}
+};
+
+const styles = {
+  container: {
+    maxWidth: '500px',
+    margin: '50px auto',
+    padding: '20px',
+    backgroundColor: '#fff',
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+    borderRadius: '10px',
+  },
+  header: {
+    fontSize: '24px',
+    fontWeight: 'bold',
+    marginBottom: '20px',
+    textAlign: 'center',
+  },
+  form: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '15px',
+  },
+  formGroup: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  label: {
+    fontSize: '14px',
+    fontWeight: '500',
+    marginBottom: '5px',
+    color: '#333',
+  },
+  input: {
+    padding: '10px',
+    fontSize: '16px',
+    border: '1px solid #ccc',
+    borderRadius: '5px',
+  },
+  button: {
+    padding: '10px 15px',
+    backgroundColor: '#4A90E2',
+    color: '#fff',
+    fontSize: '16px',
+    fontWeight: '600',
+    border: 'none',
+    borderRadius: '5px',
+    cursor: 'pointer',
+    textAlign: 'center',
+  },
+};
+
+export default AddSchool;

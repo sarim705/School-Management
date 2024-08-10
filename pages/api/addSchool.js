@@ -1,26 +1,47 @@
-import nextConnect from 'next-connect';
+import { createRouter } from 'next-connect';
 import multer from 'multer';
 import pool from '../../lib/db';
 
-const upload = multer({ dest: 'public/schoolImages/' });
-
-const apiRoute = nextConnect({
-  onError(error, req, res) {
-    res.status(501).json({ error: `Sorry something went wrong! ${error.message}` });
-  },
-  onNoMatch(req, res) {
-    res.status(405).json({ error: `Method '${req.method}' Not Allowed` });
+// Configure multer for file uploads
+const upload = multer({
+  dest: 'public/schoolImages/',
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype.startsWith('image/')) {
+      cb(null, true);
+    } else {
+      cb(new Error('Invalid file type, only images are allowed!'), false);
+    }
   },
 });
 
-apiRoute.use(upload.single('image'));
+const router = createRouter();
 
-apiRoute.post(async (req, res) => {
+// Apply multer middleware
+router.use(upload.single('image'));
+
+router.post(async (req, res) => {
   const { name, address, city, state, contact, email_id } = req.body;
-  const image = req.file.path;
+
+  // Log the uploaded file to debug
+  console.log('Uploaded file:', req.file);
+
+  // Construct the image path
+  const image = req.file ? `/schoolImages/${req.file.filename}` : null;
+
+  // Validate the input data
+  if (!name || !address || !city || !state || !contact || !email_id) {
+    return res.status(400).json({ error: 'All fields except image are required' });
+  }
 
   try {
-    const [result] = await pool.query('INSERT INTO schools (name, address, city, state, contact, image, email_id) VALUES (?, ?, ?, ?, ?, ?, ?)', [name, address, city, state, contact, image, email_id]);
+    const [result] = await pool.query(
+      'INSERT INTO schools (name, address, city, state, contact, image, email_id) VALUES (?, ?, ?, ?, ?, ?, ?)',
+      [name, address, city, state, contact, image, email_id]
+    );
+
+    console.log('Database insert result:', result);
+
     res.status(201).json({ id: result.insertId, name, address, city, state, contact, image, email_id });
   } catch (error) {
     console.error('Database error:', error);
@@ -28,10 +49,11 @@ apiRoute.post(async (req, res) => {
   }
 });
 
-export default apiRoute;
-
+// Disable default body parsing since multer handles file uploads
 export const config = {
   api: {
     bodyParser: false,
   },
 };
+
+export default router.handler();
