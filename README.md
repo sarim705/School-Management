@@ -1,36 +1,83 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+School Management System
 
-## Getting Started
+This is a School Management System built with Next.js, using MySQL as the database and Axios for making API requests. The project allows users to add new schools and display a list of all schools with details like name, address, contact information, and Schoolimages. The project uses  CSS for styling and react-hook-form for managing form inputs.
 
-First, run the development server:
+Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Add School: Users can add new schools with details such as name, address, city, state, contact information, and an optional logo image.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Show Schools: Displays a list of all schools with their respective details.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+API Routes: Custom API routes to handle the addition and retrieval of school data.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Form Management: Utilizes react-hook-form to manage and validate form inputs efficiently.
 
-## Learn More
+Technologies Used
 
-To learn more about Next.js, take a look at the following resources:
+Next.js: A React framework for building fast and scalable web applications.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+MySQL: An open-source relational database management system used to store school data.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+Axios: A promise-based HTTP client for making API requests from the client side.
 
-## Deploy on Vercel
+Multer: A Node.js middleware used for handling multipart/form-data, which is primarily used for uploading files.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+React Hook Form: A library for managing form state and validation in React applications.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Inline CSS: Styling is done directly within the JSX elements to keep the codebase simple and focused.
+
+Setting Up the Project
+
+1) Clone the Repository: git clone https://github.com/sarim705/School-Management.git
+ 
+    cd Projects
+
+2) Install Dependencies: npm install
+  
+3) Database Configuration:
+
+writing  the lib/db.js file with local MySQL database credentials.
+import mysql from 'mysql2/promise';
+
+const pool = mysql.createPool({
+  host: 'localhost',
+  user: 'root',
+  password: 'password',
+  database: 'assignment',
+});
+
+export default pool;
+
+Run the Development Server:  npm run dev
+
+Open http://localhost:3000 to view the project in  browser
+
+Multer
+
+Multer is used in this project for handling file uploads, particularly the school logo images. It processes multipart/form-data, which is typically used for file uploads.
+
+MySQL
+
+MySQL is used as the database to store the school data, including name, address, city, state, contact, email, and image paths. The project uses the mysql2 package to interact with the database using promises.
+
+React Hook Form
+
+react-hook-form is used to manage the form state and validation in the addSchool page. It simplifies form handling by reducing the amount of code needed to manage state, validation, and error messages.
+
+Inline CSS
+
+Inline CSS is used throughout the project to handle the styling directly within the JSX components, making it easier to manage styles in  projects without external dependencies.
+
+Deployment
+
+This project can be deployed to services like Vercel. Ensure that the MySQL database is accessible remotely or through a cloud provider for production deployment
+
+
+
+
+
+
+   
+   
+
+
